@@ -1,13 +1,13 @@
-const mysql = require('mysql');
 const keys = require('./ENV/keys');
+import { Pool, createPool } from "mysql";
 
 export class DBConnection {
-  private static pool: any;
+  private static pool: Pool;
   private constructor() {}
 
   static getInstance() {
     if (!DBConnection.pool) {
-      DBConnection.pool = mysql.createPool(keys.dbConnection);
+      DBConnection.pool = createPool(keys.dbConnection);
 
       DBConnection.pool.getConnection(function (err: any, connection: any) {
         if (err) throw err;

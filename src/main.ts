@@ -5,7 +5,7 @@ import { DBConnection } from './Config/DBConnection';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  const pool = await DBConnection.getInstance();
+  const pool = DBConnection.getInstance();
   const appService = app.get(AppService);
   await appService.getOneUser();
   pool.end();

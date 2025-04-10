@@ -1,5 +1,5 @@
 module.exports = {
-  nodeEnv : process.env.NODE_ENV,
+  nodeEnv: process.env.NODE_ENV,
   databaseURL: process.env.databaseURL,
   serverKey: process.env.serverKey,
   hashCode: process.env.HASHCODE,

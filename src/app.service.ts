@@ -9,6 +9,7 @@ export class AppService {
   }
 
   async getOneUser() {
-    return await User.findOne({ limit: 1 });
+    const user = await User.findOne({ limit: 1, raw: true });
+    console.log({user});
   }
 }

@@ -10,6 +10,6 @@ export class AppService {
 
   async getOneUser() {
     const user = await User.findOne({ limit: 1, raw: true });
-    console.log({"👽 user 👽": user});
+    console.log({user});
   }
 }

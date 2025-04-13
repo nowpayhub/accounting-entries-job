@@ -103,7 +103,7 @@ jobs:
               echo we are on :${CIRCLE_BRANCH} branch
             fi
 
-            if [ ${CIRCLE_BRANCH} == "SE-243" ]; then 
+            if [ ${CIRCLE_BRANCH} == "SE-243" ]; then
               # Authenticate gcloud CLI
               echo "Authenticating with gcloud..."
               echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json

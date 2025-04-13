@@ -1,0 +1,3 @@
+[submodule "src/backend_db"]
+	path = src/backend_db
+	url = git@github.com:nowpayhub/backend_db.git

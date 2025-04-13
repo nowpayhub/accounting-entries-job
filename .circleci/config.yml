@@ -120,6 +120,13 @@ jobs:
               docker push me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
               echo finish 2
               echo finish: docker image has been pushed successfully
+
+              # Deploy the Cloud Run
+              gcloud run jobs update accounting-entries-job
+                --image me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job:latest
+                --region me-central2
+              echo finsih 3
+              echo finsih: Image deployed successfully
             else
               echo we are on :${CIRCLE_BRANCH} branch
             fi

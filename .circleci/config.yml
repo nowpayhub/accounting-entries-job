@@ -1,0 +1,131 @@
+version: 2.1
+
+executors:
+  docker-gcloud:
+    docker:
+      - image: google/cloud-sdk:slim
+    environment:
+      DOCKER_BUILDKIT: 1
+  
+  node-executor:
+    docker:
+      - image: cimg/node:18.18.0
+
+jobs:
+  build_accounting_entries_job:
+    executor: docker-gcloud
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      # 1. Clone the backend_db repo
+      - run:
+          name: Fetch backend_db repo from github
+          command: cd ./src && git clone -b ${CIRCLE_BRANCH} https://github.com/nowpayhub/backend_db.git
+
+      # - run: # Temporarily till fix tests issue
+      #     name: Run unit test
+      #     command: npm run test
+
+      # 2. Build the docker image
+      - run:
+          name: Build accounting_entries_job image
+          command: docker build -t accounting-entries-job .
+
+      # 
+      # only for deployment on prod or beta or dev envs
+      - run:
+          name: Check if the current branch need to deploy or not
+          command: |
+
+            if [ ${CIRCLE_BRANCH} == "main" ]; then
+              # Authenticate gcloud CLI
+              echo "Authenticating with gcloud..."
+              echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
+              echo "Create the key file"
+              gcloud auth activate-service-account circleci@nowpay-saudi.iam.gserviceaccount.com --key-file=/tmp/key-file.json
+              gcloud config set project ${PROJECT_ID}
+              echo finish 1
+              echo finish: "gcloud CLI authenticated successfully"
+
+              # Push the docker image
+              gcloud config set compute/region me-central2
+              docker tag accounting-entries-job me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              gcloud auth configure-docker me-central2-docker.pkg.dev
+              docker push me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              echo finish 2
+              echo finish: docker image has been pushed successfully
+            else
+              echo we are on :${CIRCLE_BRANCH} branch
+            fi
+
+            if [ ${CIRCLE_BRANCH} == "beta" ]; then
+              # Authenticate gcloud CLI
+              echo "Authenticating with gcloud..."
+              echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
+              echo "Create the key file"
+              gcloud auth activate-service-account circleci@nowpay-saudi.iam.gserviceaccount.com --key-file=/tmp/key-file.json
+              gcloud config set project ${PROJECT_ID}
+              echo finish 1
+              echo finish: "gcloud CLI authenticated successfully"
+
+              # Push the docker image
+              gcloud config set compute/region me-central2
+              docker tag accounting-entries-job me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              gcloud auth configure-docker me-central2-docker.pkg.dev
+              docker push me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              echo finish 2
+              echo finish: docker image has been pushed successfully
+            else
+              echo we are on :${CIRCLE_BRANCH} branch
+            fi
+
+            if [ ${CIRCLE_BRANCH} == "prod" ]; then
+              # Authenticate gcloud CLI
+              echo "Authenticating with gcloud..."
+              echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
+              echo "Create the key file"
+              gcloud auth activate-service-account circleci@nowpay-saudi.iam.gserviceaccount.com --key-file=/tmp/key-file.json
+              gcloud config set project ${PROJECT_ID}
+              echo finish 1
+              echo finish: "gcloud CLI authenticated successfully"
+
+              # Push the docker image
+              gcloud config set compute/region me-central2
+              docker tag accounting-entries-job me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              gcloud auth configure-docker me-central2-docker.pkg.dev
+              docker push me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              echo finish 2
+              echo finish: docker image has been pushed successfully
+            else
+              echo we are on :${CIRCLE_BRANCH} branch
+            fi
+
+            if [ ${CIRCLE_BRANCH} == "SE-243" ]; then
+              # Authenticate gcloud CLI
+              echo "Authenticating with gcloud..."
+              echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
+              echo "Create the key file"
+              gcloud auth activate-service-account circleci@nowpay-saudi.iam.gserviceaccount.com --key-file=/tmp/key-file.json
+              gcloud config set project ${PROJECT_ID}
+              echo finish 1
+              echo finish: "gcloud CLI authenticated successfully"
+
+              # Push the docker image
+              gcloud config set compute/region me-central2
+              docker tag accounting-entries-job me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              gcloud auth configure-docker me-central2-docker.pkg.dev
+              docker push me-central2-docker.pkg.dev/nowpay-saudi/accounting-entries-job/accounting-entries-job
+              echo finish 2
+              echo finish: docker image has been pushed successfully
+            else
+              echo we are on :${CIRCLE_BRANCH} branch
+            fi
+
+workflows:
+  version: 2.1
+  main:
+    jobs:
+      - build_accounting_entries_job

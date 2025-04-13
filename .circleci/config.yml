@@ -40,7 +40,7 @@ jobs:
           name: Check if the current branch need to deploy or not
           command: |
 
-            if [ ${CIRCLE_BRANCH} == "main" ]; then
+            if [ ${CIRCLE_BRANCH} == "se-main" ]; then
               # Authenticate gcloud CLI
               echo "Authenticating with gcloud..."
               echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
@@ -68,7 +68,7 @@ jobs:
               echo we are on :${CIRCLE_BRANCH} branch
             fi
 
-            if [ ${CIRCLE_BRANCH} == "beta" ]; then
+            if [ ${CIRCLE_BRANCH} == "se-beta" ]; then
               # Authenticate gcloud CLI
               echo "Authenticating with gcloud..."
               echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json
@@ -96,7 +96,7 @@ jobs:
               echo we are on :${CIRCLE_BRANCH} branch
             fi
 
-            if [ ${CIRCLE_BRANCH} == "prod" ]; then
+            if [ ${CIRCLE_BRANCH} == "se-prod" ]; then
               # Authenticate gcloud CLI
               echo "Authenticating with gcloud..."
               echo "$GCLOUD_SERVICE_KEY" | base64 --decode > /tmp/key-file.json

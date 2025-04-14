@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { User } from "./backend_db/Index";
-import { QueryTypes } from 'sequelize';
+import { AdvanceStatusLog, AccountEntries } from './backend_db/Index';
+import { sequelize } from "./backend_db/Models/InitConnection";
 
 @Injectable()
 export class AppService {
@@ -8,8 +8,18 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async getOneUser() {
-    const user = await User.findOne({ limit: 1, raw: true });
-    console.log({user});
+  async insertLoanIssuanceAccountEntries() {
+    await sequelize.transaction(async (t) => {
+      const advances = await AdvanceStatusLog.getTodayTransferredAdvances(t);
+
+      console.log({advances});
+
+      await Promise.all(advances.map(advance => {
+        const totalRevenue = Number(advance.revenue) + Number(advance.processingFees);
+        const totalRevenueWithoutVAT = Number((totalRevenue / 1.15).toFixed(2));
+        advance.totalRevenueWithoutVAT = totalRevenueWithoutVAT;
+        return AccountEntries.insertLoanIssuance(advance, t);
+      }));
+    });
   }
 }

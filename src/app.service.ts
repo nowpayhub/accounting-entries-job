@@ -8,7 +8,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async insertLoanIssuanceAccountEntries() {
+  async insertLoanIssuance() {
     await sequelize.transaction(async (t) => {
       const advances = await AdvanceStatusLog.getTodayTransferredAdvances(t);
 

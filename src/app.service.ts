@@ -28,7 +28,7 @@ export class AppService {
       console.log('Start invoice issuance entries >>>>>>>>' , new Date());
       
       await this.invoiceIssuanceService.submitInvoiceIssuanceAccountingEntries(t);
-      console.log('Finish invoice issuance entries >>>>>>' , new Date());
+      console.log('Finish invoice issuance entries >>>>>>>>' , new Date());
       
     });
   }

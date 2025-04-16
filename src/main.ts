@@ -8,6 +8,7 @@ async function bootstrap() {
   const pool = DBConnection.getInstance();
   const appService = app.get(AppService);
   await appService.processAccountingEntries();
+  await appService.insertDailyRevenue();
   pool.end();
   await app.close();
   process.exit(0);

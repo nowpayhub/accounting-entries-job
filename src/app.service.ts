@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AdvanceStatusLog, AccountEntries } from './backend_db/Index';
+import {
+  AdvanceStatusLog,
+  AccountEntries,
+  AdvancesDailyRevenue,
+} from './backend_db/Index';
 import { sequelize } from "./backend_db/Models/InitConnection";
 import { InvoiceIssuanceService } from './invoice-issuance/invoice-issuance.service';
 
@@ -31,5 +35,16 @@ export class AppService {
       console.log('Finish invoice issuance entries >>>>>>>>' , new Date());
       
     });
+  }
+
+  async insertDailyRevenue() {
+    await sequelize.transaction(async (t) => {
+      const dailyRevenueRecords = await AdvancesDailyRevenue.getTodayTransferredDailyRevenues(t);
+      console.log({dailyRevenueRecords});
+
+      await Promise.all(dailyRevenueRecords.map(async (dailyRevenue) => {
+        return AccountEntries.insertDailyRevenue(dailyRevenue, t);
+      }));
+    })
   }
 }

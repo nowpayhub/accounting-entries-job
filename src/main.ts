@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const pool = DBConnection.getInstance();
   const appService = app.get(AppService);
-  await appService.insertLoanIssuance();
+  await appService.processAccountingEntries();
   await appService.insertDailyRevenue();
   pool.end();
   await app.close();

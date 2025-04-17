@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { AdvanceStatusLog, AccountEntries } from './backend_db/Index';
 import { sequelize } from "./backend_db/Models/InitConnection";
 import { InvoiceIssuanceService } from './invoice-issuance/invoice-issuance.service';
+import { InvoiceCollectionService } from './invoice-collection/invoice-collection.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly invoiceIssuanceService: InvoiceIssuanceService) {}
+  constructor(
+    private readonly invoiceIssuanceService: InvoiceIssuanceService,
+    private readonly invoiceCollectionService: InvoiceCollectionService,
+  ) {}
 
   getHello(): string {
     return 'Hello World!';
@@ -29,6 +33,11 @@ export class AppService {
       
       await this.invoiceIssuanceService.submitInvoiceIssuanceAccountingEntries(t);
       console.log('Finish invoice issuance entries >>>>>>>>' , new Date());
+      
+      // Handle invoice collection entries
+      console.log('Start invoice collection entries >>>>>>>>' , new Date());
+      await this.invoiceCollectionService.generateAndSubmitInvoiceCollectionAccountingEntries(t);
+      console.log('Finish invoice collection entries >>>>>>>>' , new Date());
       
     });
   }
